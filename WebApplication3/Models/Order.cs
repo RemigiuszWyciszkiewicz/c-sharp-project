@@ -7,5 +7,8 @@ namespace WebApplication3.Models
 {
     public class Order
     {
+        public int bookId { get; set; }
+        public int userId { get; set; }
+        public int amount { get; set; }
     }
 }
