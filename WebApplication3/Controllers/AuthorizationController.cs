@@ -33,14 +33,56 @@ namespace WebApplication3
             return "value";
         }
 
-       
+        [Route("signUp")]
+        [HttpPost]
+        public ResponseWrapper<User> SignUp([FromBody]User value)
+        {
+            if (!ModelState.IsValid) {
+                Console.WriteLine("Brak walidacji");
+                return new ResponseWrapper<User>()
+                {
+                    httpStatusCode = HttpStatusCode.BadRequest,
+                    responseBody = null,
+                    responseMessage = "Validation error,invalid email or password"
+                };
+            }
+            if (userRepository.checkIfEmailIsAlreadytaken(value.email))
+            {
+                Console.WriteLine("CheckIfTaken");
+                return new ResponseWrapper<User>()
+                {
+                    httpStatusCode = HttpStatusCode.BadRequest,
+                    responseBody = null,
+                    responseMessage = "Given email aleady exists."
+                };
+            }
+            else
+            {
+                userRepository.insertUserToDb(value.email, value.password);
+
+                return new ResponseWrapper<User>()
+                {
+                    httpStatusCode = HttpStatusCode.OK,
+                    responseBody = value,
+                    responseMessage = "Account has been created succesfuly."
+                };
+
+
+            }
+
+            return null;
+
+
+        }
+
+
         [Route("signUp")]
         [HttpPost]
         public ResponseWrapper<User> SignUp([FromBody]User value)
         {
             Console.WriteLine("TEST");
             Console.WriteLine(value.email);
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 Console.WriteLine("Brak walidacji");
                 return new ResponseWrapper<User>()
@@ -55,11 +97,14 @@ namespace WebApplication3
             if (userRepository.checkIfEmailIsAlreadytaken(value.email))
             {
                 Console.WriteLine("CheckIfTaken");
-                return new ResponseWrapper<User>() {
+                return new ResponseWrapper<User>()
+                {
                     httpStatusCode = HttpStatusCode.BadRequest,
                     responseBody = null,
-                    responseMessage = "Given email aleady exists."  };
-            } else
+                    responseMessage = "Given email aleady exists."
+                };
+            }
+            else
             {
                 userRepository.insertUserToDb(value.email, value.password);
 
@@ -69,10 +114,10 @@ namespace WebApplication3
                     responseBody = value,
                     responseMessage = "Account has been created succesfuly."
                 };
-              
+
 
             }
-           
+
             return null;
         }
 
