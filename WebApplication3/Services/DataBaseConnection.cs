@@ -13,11 +13,13 @@ namespace WebApplication3.Services
 
         protected void openConnection()
         {
+            Console.WriteLine("CONNECTION OPEN");
             conn.Open();
         }
 
         protected void closeConnection()
         {
+            Console.WriteLine("CONNECTION CLOSE");
             conn.Close();
         }
     }

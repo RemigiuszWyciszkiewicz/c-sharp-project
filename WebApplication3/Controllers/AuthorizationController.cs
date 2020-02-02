@@ -76,80 +76,56 @@ namespace WebApplication3
         }
 
 
-        [Route("signUp")]
-        [HttpPost]
-        public ResponseWrapper<User> SignUp([FromBody]User value)
-        {
-            Console.WriteLine("TEST");
-            Console.WriteLine(value.email);
-            if (!ModelState.IsValid)
-            {
-                Console.WriteLine("Brak walidacji");
-                return new ResponseWrapper<User>()
-                {
-                    httpStatusCode = HttpStatusCode.BadRequest,
-                    responseBody = null,
-                    responseMessage = "Validation error,invalid email or password"
-                };
-            }
-
-
-            if (userRepository.checkIfEmailIsAlreadytaken(value.email))
-            {
-                Console.WriteLine("CheckIfTaken");
-                return new ResponseWrapper<User>()
-                {
-                    httpStatusCode = HttpStatusCode.BadRequest,
-                    responseBody = null,
-                    responseMessage = "Given email aleady exists."
-                };
-            }
-            else
-            {
-                userRepository.insertUserToDb(value.email, value.password);
-
-                return new ResponseWrapper<User>()
-                {
-                    httpStatusCode = HttpStatusCode.OK,
-                    responseBody = value,
-                    responseMessage = "Account has been created succesfuly."
-                };
-
-
-            }
-
-            return null;
-        }
+     
 
         [Route("signIn")]
         [HttpPost]
         public ResponseWrapper<AuthorizationResponse> SignIn([FromBody]User user)
         {
 
-            Console.WriteLine("TEST");
+           
+
             if (authService.checkIfIsAdmin(user)) {
-
-
-
-
+                string token = TokenGenerator.generateToken() + "d2d18";
                 return new ResponseWrapper<AuthorizationResponse>()
                 {
                     httpStatusCode = HttpStatusCode.OK,
                     responseBody = new AuthorizationResponse() {
                         roleEnum = RoleEnum.ADMIN,
                         tokenExpiration = "2 hours",
-                        token = TokenGenerator.generateToken()
+                        token = token
                     },
                     responseMessage = "You are logged in as ADMIN"
                 };
             }
 
-             return new ResponseWrapper<AuthorizationResponse>()
+
+            if(authService.checkIfIsUser(user))
             {
-                httpStatusCode = HttpStatusCode.OK,
-                responseBody = null ,
-                responseMessage = "Test"
-            };
+                return new ResponseWrapper<AuthorizationResponse>()
+                {
+                    httpStatusCode = HttpStatusCode.OK,
+                    responseBody = new AuthorizationResponse()
+                    {
+                        roleEnum = RoleEnum.USER,
+                        tokenExpiration = "2 hours",
+                        token = TokenGenerator.generateToken() + "d2d" + userRepository.getId(user)
+            },
+                    responseMessage = "You are logged in as USER"
+                };
+            } else
+            {
+                return new ResponseWrapper<AuthorizationResponse>()
+                {
+                    httpStatusCode = HttpStatusCode.BadRequest,
+                    responseBody = null,
+                    responseMessage = "Wrong email or password"
+                };
+            }
+
+
+            
+           
 
 
         }

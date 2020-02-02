@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication3.Models;
 
 namespace WebApplication3.Services
 {
@@ -43,9 +44,27 @@ namespace WebApplication3.Services
             
         }
 
-        
-           
-           
+        protected MySqlDataReader checkIfThereIsUSerwithSpecificPasswordAndEmail(User user)
+        {
+            openConnection();
+            MySqlCommand cmd = new MySqlCommand("select count(id) from user where email = @email and password = @password",conn);
+            cmd.Parameters.AddWithValue("@email", user.email);
+            cmd.Parameters.AddWithValue("@password", user.password);
+            return cmd.ExecuteReader();
+        }
+
+        protected MySqlDataReader getIdOfuser(User user)
+        {
+            openConnection();
+            MySqlCommand cmd = new MySqlCommand("select id from user where email = @email and password = @password", conn);
+            cmd.Parameters.AddWithValue("@email", user.email);
+            cmd.Parameters.AddWithValue("@password", user.password);
+            return cmd.ExecuteReader();
+        }
+
+
+
+
 
     }
 }
