@@ -92,6 +92,16 @@ namespace WebApplication3.Services
             return cmd.ExecuteReader();
         }
 
+        protected void deleteOrderfromDb(Order order)
+        {
+            openConnection();
+            MySqlCommand cmd = new MySqlCommand("delete from bookstore.order a where a.user_id=@user_id and a.book_id = @book_id",conn);
+            cmd.Parameters.AddWithValue("@user_id", order.userId);
+            cmd.Parameters.AddWithValue("@book_id", order.bookId);
+            cmd.ExecuteReader();
+            closeConnection();
+        }
+
 
 
 

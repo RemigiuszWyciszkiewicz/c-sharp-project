@@ -43,6 +43,15 @@ namespace WebApplication3.Controllers
              
         }
 
+        // DELETE api/<controller>/5
+        [HttpDelete]
+        public void deleteOrder([FromBody]Order value)
+        {
+            Console.WriteLine(value);
+            orderRepository.deleteOrder(value);
+
+        }
+
         // POST api/<controller>
         [HttpPost]
         public string Post([FromBody]Order order)
@@ -59,10 +68,6 @@ namespace WebApplication3.Controllers
         {
         }
 
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+     
     }
 }

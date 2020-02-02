@@ -62,6 +62,12 @@ namespace WebApplication3.Services
         }
 
 
+       public void deleteOrder(Order order)
+        {
+            deleteOrderfromDb(order);
+
+        }
+
 
 
     }
