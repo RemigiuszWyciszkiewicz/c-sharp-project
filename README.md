@@ -1,3 +1,5 @@
+Program zaliczeniowy
+
 CREATE TABLE `book` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(55) DEFAULT NULL,
